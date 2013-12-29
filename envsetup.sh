@@ -29,7 +29,8 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - cmremote: Add git remote for matching CM repository.
 - crremote: Add gerrit remote for matching Carbon repository.
 - mka:      Builds using SCHED_BATCH on all processors
-
+- repolastsync: Prints date and time of last repo sync.
+- repopick: Utility to fetch changes from Gerrit.
 
 Environment options:
 - SANITIZE_HOST: Set to 'true' to use ASAN for all host modules. Note that
@@ -1630,6 +1631,13 @@ function godir () {
         pathname=${lines[0]}
     fi
     \cd $T/$pathname
+}
+
+function repolastsync() {
+    RLSPATH="$ANDROID_BUILD_TOP/.repo/.repo_fetchtimes.json"
+    RLSLOCAL=$(date -d "$(stat -c %z $RLSPATH)" +"%e %b %Y, %T %Z")
+    RLSUTC=$(date -d "$(stat -c %z $RLSPATH)" -u +"%e %b %Y, %T %Z")
+    echo "Last repo sync: $RLSLOCAL / $RLSUTC"
 }
 
 # Print colored exit condition
