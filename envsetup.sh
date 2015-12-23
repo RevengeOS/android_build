@@ -26,6 +26,9 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - sepgrep:   Greps on all local sepolicy files.
 - sgrep:     Greps on all local source files.
 - godir:     Go to the directory containing a file.
+- cmremote: Add git remote for matching CM repository.
+- crremote: Add gerrit remote for matching Carbon repository.
+
 
 Environment options:
 - SANITIZE_HOST: Set to 'true' to use ASAN for all host modules. Note that
@@ -154,6 +157,44 @@ function check_variant()
     done
     return 1
 }
+
+function cmremote()
+{
+    git remote rm cm 2> /dev/null
+    if [ ! -d .git ]
+    then
+        echo .git directory not found. Please run this from the root directory of the Android repository you wish to set up.
+    fi
+    PROJECT=`pwd -P | sed s#$ANDROID_BUILD_TOP/##g`
+    PFX="android_$(echo $PROJECT | sed 's/\//_/g')"
+    git remote add cm git@github.com:CyanogenMod/$PFX
+    echo "Remote 'cm' created"
+}
+
+
+function crremote()
+{
+    git remote rm crremote 2> /dev/null
+    if [ ! -d .git ]
+    then
+        echo .git directory not found. Please run this from the root directory of the Android repository you wish to set up.
+    fi
+    GERRIT_REMOTE=$(cat .git/config  | grep git://github.com | awk '{ print $NF }' | sed s#git://github.com/##g)
+    if [ -z "$GERRIT_REMOTE" ]
+    then
+        echo Unable to set up the git remote, are you in the root of the repo?
+        return 0
+    fi
+    CRUSER=`git config --get review.review.carbonrom.org.username`
+    if [ -z "$CRUSER" ]
+    then
+        git remote add crremote ssh://review.carbonrom.org:29418/$GERRIT_REMOTE
+    else
+        git remote add crremote ssh://$CRUSER@review.carbonrom.org:29418/$GERRIT_REMOTE
+    fi
+    echo You can now push to "crremote".
+ }
+
 
 function setpaths()
 {
@@ -297,6 +338,12 @@ function printconfig()
         return
     fi
     get_build_var report_config
+}
+
+function repopick() {
+    set_stuff_for_environment
+    T=$(gettop)
+    $T/build/tools/repopick.py $@
 }
 
 function set_stuff_for_environment()
