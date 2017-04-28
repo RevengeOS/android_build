@@ -2988,6 +2988,18 @@ ifdef BUILT_VENDOR_MATRIX
 	$(hide) cp $(BUILT_VENDOR_MATRIX) $(zip_root)/META/vendor_matrix.xml
 endif
 
+# Export signing properties on Carbon Builds
+ifneq ($(CARBON_BUILD),)
+	$(shell echo "CARBON_BUILD=$(CARBON_BUILD)" > $(PRODUCT_OUT)/signing.props)
+	$(shell echo "TARGET_OTA_ASSERT_DEVICE=$(TARGET_OTA_ASSERT_DEVICE)" >> $(PRODUCT_OUT)/signing.props)
+	$(shell echo "TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT=$(TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT)" >> $(PRODUCT_OUT)/signing.props)
+	$(shell echo "TARGET_UNIFIED_DEVICE=$(TARGET_UNIFIED_DEVICE)" >> $(PRODUCT_OUT)/signing.props)
+	$(shell echo "TARGET_DEVICE=$(TARGET_DEVICE)" >> $(PRODUCT_OUT)/signing.props)
+	$(shell echo "TARGET_SETS_FSTAB=$(TARGET_SETS_FSTAB)" >> $(PRODUCT_OUT)/signing.props)
+	$(shell echo "CARBON_VERSION=$(CARBON_VERSION)" >> $(PRODUCT_OUT)/signing.props)
+	$(shell echo "TARGET_RELEASETOOL_OTA_FROM_TARGET_ADDITIONAL_ARGS=$(TARGET_RELEASETOOL_OTA_FROM_TARGET_ADDITIONAL_ARGS)" >> $(PRODUCT_OUT)/signing.props)
+endif
+
 	$(hide) PATH=$(foreach p,$(INTERNAL_USERIMAGES_BINARY_PATHS),$(p):)$$PATH MKBOOTIMG=$(MKBOOTIMG) \
 	    build/make/tools/releasetools/add_img_to_target_files -a -v -p $(HOST_OUT) $(zip_root)
 	@# Zip everything up, preserving symlinks and placing META/ files first to
