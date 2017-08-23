@@ -29,6 +29,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - sgrep:     Greps on all local source files.
 - godir:     Go to the directory containing a file.
 - cmremote: Add git remote for matching CM repository.
+- crbremote: Add git remote for matching CarbonBeta repository.
 - crremote: Add gerrit remote for matching Carbon repository.
 - mka:      Builds using SCHED_BATCH on all processors
 - repolastsync: Prints date and time of last repo sync.
@@ -182,6 +183,19 @@ function cmremote()
     PFX="android_$(echo $PROJECT | sed 's/\//_/g')"
     git remote add cm git@github.com:CyanogenMod/$PFX
     echo "Remote 'cm' created"
+}
+
+function crbremote()
+{
+    git remote rm crb 2> /dev/null
+    if [ ! -d .git ]
+    then
+        echo .git directory not found. Please run this from the root directory of the Android repository you wish to set up.
+    fi
+    PROJECT=`pwd -P | sed s#$ANDROID_BUILD_TOP/##g`
+    PFX="android_$(echo $PROJECT | sed 's/\//_/g')"
+    git remote add crb git@github.com:CarbonBeta/$PFX
+    echo "Remote 'crb' created"
 }
 
 
