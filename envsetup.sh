@@ -28,7 +28,8 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - sepgrep:   Greps on all local sepolicy files.
 - sgrep:     Greps on all local source files.
 - godir:     Go to the directory containing a file.
-- cmremote: Add git remote for matching CM repository.
+- cmremote: Add git remote for matching LOS repository.
+- losremote: Add git remote for matching LOS repository.
 - crbremote: Add git remote for matching CarbonBeta repository.
 - crremote: Add gerrit remote for matching Carbon repository.
 - mka:      Builds using SCHED_BATCH on all processors
@@ -181,7 +182,20 @@ function cmremote()
     fi
     PROJECT=`pwd -P | sed s#$ANDROID_BUILD_TOP/##g`
     PFX="android_$(echo $PROJECT | sed 's/\//_/g')"
-    git remote add cm git@github.com:CyanogenMod/$PFX
+    git remote add cm git@github.com:LineageOS/$PFX
+    echo "Remote 'cm' created"
+}
+
+function losremote()
+{
+    git remote rm cm 2> /dev/null
+    if [ ! -d .git ]
+    then
+        echo .git directory not found. Please run this from the root directory of the Android repository you wish to set up.
+    fi
+    PROJECT=`pwd -P | sed s#$ANDROID_BUILD_TOP/##g`
+    PFX="android_$(echo $PROJECT | sed 's/\//_/g')"
+    git remote add cm git@github.com:LineageOS/$PFX
     echo "Remote 'cm' created"
 }
 
