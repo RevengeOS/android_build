@@ -249,6 +249,10 @@ function aospremote()
     then
         PROJECT="build"
     fi
+    if [ $PROJECT = "hardware/qcom/audio/default" ]
+    then
+        PROJECT="hardware/qcom/audio"
+    fi
     if (echo $PROJECT | grep -qv "^device")
     then
         PFX="platform/"
