@@ -244,6 +244,11 @@ function aospremote()
         echo .git directory not found. Please run this from the root directory of the Android repository you wish to set up.
     fi
     PROJECT=`pwd -P | sed s#$ANDROID_BUILD_TOP/##g`
+    # Google moved the repo location in Oreo
+    if [ $PROJECT = "build/make" ]
+    then
+        PROJECT="build"
+    fi
     if (echo $PROJECT | grep -qv "^device")
     then
         PFX="platform/"
