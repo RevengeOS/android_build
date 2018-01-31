@@ -474,6 +474,9 @@ LOCAL_IS_AUX_MODULE :=
 
 LOCAL_PROTOC_OUTPUT:=
 
+# Include any vendor specific clear_vars.mk file
+-include vendor/*/build/core/clear_vars.mk
+
 # Trim MAKEFILE_LIST so that $(call my-dir) doesn't need to
 # iterate over thousands of entries every time.
 # Leave the current makefile to make sure we don't break anything
