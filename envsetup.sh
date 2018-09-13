@@ -137,13 +137,13 @@ function check_product()
         return
     fi
 
-    if (echo -n $1 | grep -q -e "^carbon_") ; then
-        CARBON_BUILD=$(echo -n $1 | sed -e 's/^carbon_//g')
-        export BUILD_NUMBER=$((date +%s%N ; echo $CARBON_BUILD; hostname) | openssl sha1 | sed -e 's/.*=//g; s/ //g' | cut -c1-10)
+    if (echo -n $1 | grep -q -e "^revengeos_") ; then
+        REVENGEOS_BUILD=$(echo -n $1 | sed -e 's/^revengeos_//g')
+        export BUILD_NUMBER=$((date +%s%N ; echo $REVENGEOS_BUILD; hostname) | openssl sha1 | sed -e 's/.*=//g; s/ //g' | cut -c1-10)
     else
-        CARBON_BUILD=
+        REVENGEOS_BUILD=
     fi
-    export CARBON_BUILD
+    export REVENGEOS_BUILD
 
         TARGET_PRODUCT=$1 \
         TARGET_BUILD_VARIANT= \
@@ -1756,7 +1756,7 @@ unset f
 
 # Add completions
 check_bash_version && {
-    dirs="sdk/bash_completion vendor/carbon/bash_completion"
+    dirs="sdk/bash_completion vendor/revengeos/bash_completion"
     for dir in $dirs; do
     if [ -d ${dir} ]; then
         for f in `/bin/ls ${dir}/[a-z]*.bash 2> /dev/null`; do

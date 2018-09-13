@@ -40,7 +40,7 @@ invert_bool = $(if $(strip $(1)),,true)
 $(shell mkdir -p $(dir $(SOONG_VARIABLES)))
 _contents := {$(newline)
 
-include vendor/carbon/build/soong/soong_config.mk
+include vendor/revengeos/build/soong/soong_config.mk
 
 $(call add_json_str,  Make_suffix, -$(TARGET_PRODUCT))
 

@@ -862,33 +862,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Print("Formatting /data")
     script.FormatPartition("/data", OPTIONS.mount_by_label)
 
-  script.Print("                 ,....,                 ");
-  script.Print("           .,lx0XNWWWNKOd:.             ");
-  script.Print("        .:OWMMMMMMMMMMMMMMMXo.          ");
-  script.Print("      .oWMMMMMMMMMMMMMMMMMMMMM0,        ");
-  script.Print("     cWMMMMMMMMMMMMMMMMMMMMMMMMMO.      ");
-  script.Print("   .OMMMMMMMMMMMMMMMMMMMMMMMMMMWd.      ");
-  script.Print("  .KMMMMMMMMMKkdlllldkKMMMMMMMO.        ");
-  script.Print("  OMMMM`  x;.          .;xWMX;          ");
-  script.Print(" :MMMM  ..`               .;.           ");
-  script.Print(" KMMM  .o;                              ");
-  script.Print(".MMM  .0M;                              ");
-  script.Print("'MM` .KMMl                              ");
-  script.Print(".MN  xMMM0                              ");
-  script.Print(".NM ,MMMMM:                           ..");
-  script.Print(" dM :MMMMMW'                         .k ");
-  script.Print(" .N cMMMMMMW;                       'Xc ");
-  script.Print("  ,x;MMMMMMMMx.                   .oW0. ");
-  script.Print("   ,.NMMMMMMMMWx'                lNMK.  ");
-  script.Print("     ,NMMMMMMMMMMXx:'.     ..:o ,MMO.   ");
-  script.Print("      .kMMMMMMMMMMMMMMNXXXNMMW  NWl.    ");
-  script.Print("        ,OMMMMMMMMMMMMMMMMMMK  Xd.      ");
-  script.Print("          .oKMMMMMMMMMMMMMKc  :.        ");
-  script.Print("             .:okKNWWWNKdl'  '          ");
-  script.Print("                 ''...`',  +'           ");
-  script.Print("                                        ");
-  script.Print("                carbonrom.org           ");
-
   system_progress = 0.75
 
   if OPTIONS.wipe_user_data:
@@ -940,7 +913,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.WriteRawImage(bootpartition, "boot.img")
 
   script.ShowProgress(0.1, 0)
-  script.Print("Enjoy CarbonROM!");
+  script.Print("Installation completed");
   device_specific.FullOTA_InstallEnd()
 
   if OPTIONS.extra_script is not None:
