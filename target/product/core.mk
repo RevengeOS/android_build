@@ -34,7 +34,6 @@ PRODUCT_PACKAGES += \
     DeskClock \
     DocumentsUI \
     DownloadProviderUi \
-    Email \
     ExactCalculator \
     ExternalStorageProvider \
     FusedLocation \
@@ -50,7 +49,6 @@ PRODUCT_PACKAGES += \
     PrintSpooler \
     PrintRecommendationService \
     ProxyHandler \
-    QuickSearchBox \
     SecureElement \
     Settings \
     SettingsIntelligence \
