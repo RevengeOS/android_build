@@ -1258,9 +1258,6 @@ endif
 # Include any vendor specific config.mk file
 -include vendor/*/build/core/config.mk
 
-# Rules for QCOM targets
--include $(TOPDIR)vendor/*/build/core/qcom_target.mk
-
 # Rules for MTK targets
 -include $(TOPDIR)vendor/*/build/core/mtk_target.mk
 
