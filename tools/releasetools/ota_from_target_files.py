@@ -822,27 +822,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   script.AppendExtra("ifelse(is_mounted(\"/system\"), unmount(\"/system\"));")
 
-  cafrev = target_info.GetBuildProp("ro.caf.revision")
-  date = target_info.GetBuildProp("ro.build.date")
-  version = target_info.GetBuildProp("ro.citrus.version")
-
-  if target_info.GetBuildProp("ro.product.model") is not None:
-    model = target_info.GetBuildProp("ro.product.model")
-    script.Print("***********************************************");
-    script.Print("           Citrus-CAF for %s"%(model));
-    script.Print("     Version: %s"%(version));
-    script.Print("     CAF Revision: %s"%(cafrev));
-    script.Print("     Compiled on: %s"%(date));
-    script.Print("***********************************************");
-  else:
-    name = target_info.GetBuildProp("ro.product.name")
-    script.Print("***********************************************");
-    script.Print("           Citrus-CAF for %s"%(name));
-    script.Print("     Version: %s"%(version));
-    script.Print("     CAF Revision: %s"%(cafrev));
-    script.Print("     Compiled on: %s"%(date));
-    script.Print("***********************************************");
-
   device_specific.FullOTA_InstallBegin()
 
   CopyInstallTools(output_zip)

@@ -61,6 +61,7 @@ if [ -n "$BUILD_THUMBPRINT" ] ; then
 fi
 echo "ro.build.characteristics=$TARGET_AAPT_CHARACTERISTICS"
 
-echo "ro.citrus.device=$CITRUS_DEVICE"
+# RevengeOS properties
+echo "ro.revengeos.device=$REVENGEOS_DEVICE"
 
 echo "# end build properties"

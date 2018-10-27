@@ -224,8 +224,8 @@ include $(BUILD_SYSTEM)/envsetup.mk
 # See envsetup.mk for a description of SCAN_EXCLUDE_DIRS
 FIND_LEAVES_EXCLUDES := $(addprefix --prune=, $(SCAN_EXCLUDE_DIRS) .repo .git)
 
-ifneq ($(CITRUS_BUILD),)
-include vendor/citrus/config/BoardConfigCitrus.mk
+ifneq ($(REVENGEOS_BUILD),)
+include vendor/revengeos/config/BoardConfigRevengeOS.mk
 endif
 
 # The build system exposes several variables for where to find the kernel
@@ -1089,10 +1089,10 @@ include $(BUILD_SYSTEM)/ninja_config.mk
 include $(BUILD_SYSTEM)/soong_config.mk
 endif
 
-ifneq ($(CITRUS_BUILD),)
+ifneq ($(REVENGEOS_BUILD),)
 ## We need to be sure the global selinux policies are included
 ## last, to avoid accidental resetting by device configs
-$(eval include vendor/citrus/sepolicy/common/sepolicy.mk)
+$(eval include vendor/revengeos/sepolicy/common/sepolicy.mk)
 endif
 
 # Include any vendor specific config.mk file
