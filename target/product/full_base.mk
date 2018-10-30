@@ -50,6 +50,9 @@ PRODUCT_PACKAGES += \
 # Put en_US first in the list, so make it default.
 PRODUCT_LOCALES := en_US
 
+# Get some sounds
+$(call inherit-product-if-exists, frameworks/base/data/sounds/AllAudio.mk)
+
 # Get a list of languages.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
