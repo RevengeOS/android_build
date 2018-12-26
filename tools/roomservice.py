@@ -1,8 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 # Copyright (C) 2013 Cybojenix <anthonydking@gmail.com>
 # Copyright (C) 2013 The OmniROM Project
-# Copyright (C) 2018 The RevengeOS Project
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +20,6 @@ from __future__ import print_function
 import json
 import sys
 import os
-import re
 from xml.etree import ElementTree as ES
 # Use the urllib importer from the Cyanogenmod roomservice
 try:
@@ -47,7 +45,6 @@ local_manifest_dir = ".repo/local_manifests"
 # change this to your name on github (or equivalent hosting)
 android_team = "RevengeOS-Devices"
 
-
 def check_repo_exists(git_data):
     if not int(git_data.get('total_count', 0)):
         raise Exception("{} not found in {} Github, exiting "
@@ -56,9 +53,8 @@ def check_repo_exists(git_data):
 
 # Note that this can only be done 5 times per minute
 def search_github_for_device(device):
-    git_device = '+'.join(re.findall('[a-z]+|[\d]+',  device))
     git_search_url = "https://api.github.com/search/repositories" \
-                     "?q=%40{}+android_device+{}+fork:true".format(android_team, git_device)
+                     "?q=%40{}+android_device+{}+fork:true".format(android_team, device)
     git_req = urllib.request.Request(git_search_url)
     try:
         response = urllib.request.urlopen(git_req)
@@ -101,12 +97,11 @@ def parse_device_directory(device_url,device):
 
 
 # Thank you RaYmAn
-def iterate_manifests(check_all):
+def iterate_manifests():
     files = []
-    if check_all:
-        for file in os.listdir(local_manifest_dir):
-            if file.endswith('.xml'):
-                files.append(os.path.join(local_manifest_dir, file))
+    for file in os.listdir(local_manifest_dir):
+        if file.endswith(".xml"):
+            files.append(os.path.join(local_manifest_dir, file))
     files.append('.repo/manifest.xml')
     for file in files:
         try:
@@ -119,19 +114,12 @@ def iterate_manifests(check_all):
                 yield project
 
 
-def check_project_exists(url):
-    for project in iterate_manifests(True):
-        if project.get("name") == url:
+def check_project_exists(url, revision, path):
+    for project in iterate_manifests():
+        if project.get("name") == url and project.get("revision") == revision and project.get("path") == path:
             return True
     return False
 
-
-def check_dup_path(directory):
-    for project in iterate_manifests(False):
-        if project.get("path") == directory:
-            print ("Duplicate path %s found! Removing" % directory)
-            return project.get("name")
-    return None
 
 # Use the indent function from http://stackoverflow.com/a/4590052
 def indent(elem, level=0):
@@ -153,16 +141,10 @@ def indent(elem, level=0):
 def create_manifest_project(url, directory,
                             remote=default_rem,
                             revision=default_rev):
-    project_exists = check_project_exists(url)
+    project_exists = check_project_exists(url, revision, directory)
 
     if project_exists:
         return None
-
-    dup_path = check_dup_path(directory)
-    if not dup_path is None:
-            write_to_manifest(
-                append_to_manifest(
-                    create_manifest_remove(dup_path)))
 
     project = ES.Element("project",
                          attrib={
@@ -172,11 +154,6 @@ def create_manifest_project(url, directory,
                              "revision": revision
                          })
     return project
-
-
-def create_manifest_remove(url):
-    remove = ES.Element("remove-project", attrib={"name": url})
-    return remove
 
 
 def append_to_manifest(project):
@@ -200,8 +177,9 @@ def write_to_manifest(manifest):
         f.write(raw_xml)
     print("wrote the new roomservice manifest")
 
+
 def parse_device_from_manifest(device):
-    for project in iterate_manifests(True):
+    for project in iterate_manifests():
         name = project.get('name')
         if name.startswith("android_device_") and name.endswith(device):
             return project.get('path')
@@ -220,7 +198,7 @@ def parse_device_from_folder(device):
     elif len(search) == 1:
         location = search[0]
     else:
-        print("your device can't be found in device sources..")
+        print("Your device can't be found in device sources..")
         location = parse_device_from_manifest(device)
     return location
 
@@ -238,6 +216,29 @@ def parse_dependency_file(location):
         raise Exception("ERROR: malformed dependency file")
     return dependencies
 
+# if there is any conflict with existing and new
+# delete the roomservice.xml file and create new
+def check_manifest_problems(dependencies):
+    for dependency in dependencies:
+        repository = dependency.get("repository")
+        target_path = dependency.get("target_path")
+        revision = dependency.get("revision", default_rev)
+        remote = dependency.get("remote", default_rem)
+
+        # check for existing projects
+        for project in iterate_manifests():
+            if project.get("revision") is not None and project.get("path") is not None:
+                if project.get("path") == target_path and project.get("revision") != revision:
+                    print("WARNING: detected conflict in revisions for repository ", repository)
+                    current_dependency = str(project.get(repository))
+                    file = ES.parse('/'.join([local_manifest_dir, "roomservice.xml"]))
+                    file_root = file.getroot()
+                    for current_project in file_root.findall('project'):
+                        new_dependency = str(current_project.find('revision'))
+                        if new_dependency == current_dependency:
+                            file_root.remove(current_project)
+                    file.write('/'.join([local_manifest_dir, "roomservice.xml"]))
+                    return
 
 def create_dependency_manifest(dependencies):
     projects = []
@@ -261,7 +262,36 @@ def create_dependency_manifest(dependencies):
             write_to_manifest(manifest)
             projects.append(target_path)
     if len(projects) > 0:
-        os.system("repo sync --force-sync %s" % " ".join(projects))
+        os.system("repo sync -f --no-clone-bundle %s" % " ".join(projects))
+
+
+def create_common_dependencies_manifest(dependencies):
+    dep_file = "revenge.dependencies"
+    common_list = []
+    if dependencies is not None:
+        for dependency in dependencies:
+            try:
+                index = common_list.index(dependency['target_path'])
+            except ValueError:
+                index = None
+            if index is None:
+                common_list.append(dependency['target_path'])
+                dep_location = '/'.join([dependency['target_path'], dep_file])
+                if not os.path.isfile(dep_location):
+                    sys.exit()
+                else:
+                    try:
+                        with open(dep_location, 'r') as f:
+                            common_deps = json.loads(f.read())
+                    except ValueError:
+                        raise Exception("ERROR: malformed dependency file")
+
+                    if common_deps is not None:
+                        print("Looking for dependencies on: ",
+                               dependency['target_path'])
+                        check_manifest_problems(common_deps)
+                        create_dependency_manifest(common_deps)
+                        create_common_dependencies_manifest(common_deps)
 
 
 def fetch_dependencies(device):
@@ -270,8 +300,10 @@ def fetch_dependencies(device):
         raise Exception("ERROR: could not find your device "
                         "folder location, bailing out")
     dependencies = parse_dependency_file(location)
+    check_manifest_problems(dependencies)
     create_dependency_manifest(dependencies)
-
+    create_common_dependencies_manifest(dependencies)
+    fetch_device(device)
 
 def check_device_exists(device):
     location = parse_device_from_folder(device)
@@ -283,7 +315,6 @@ def check_device_exists(device):
 def fetch_device(device):
     if check_device_exists(device):
         print("WARNING: Trying to fetch a device that's already there")
-        return
     git_data = search_github_for_device(device)
     device_url = android_team+"/"+get_device_url(git_data)
     device_dir = parse_device_directory(device_url,device)
@@ -294,7 +325,7 @@ def fetch_device(device):
         manifest = append_to_manifest(project)
         write_to_manifest(manifest)
         print("syncing the device config")
-        os.system('repo sync --force-sync %s' % device_dir)
+        os.system('repo sync -f --no-clone-bundle %s' % device_dir)
 
 
 if __name__ == '__main__':
