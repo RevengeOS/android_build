@@ -325,7 +325,7 @@ def fetch_device(device):
         manifest = append_to_manifest(project)
         write_to_manifest(manifest)
         print("syncing the device config")
-        os.system('repo sync -f --no-clone-bundle %s' % device_dir)
+        os.system('repo sync --force-sync -f --no-clone-bundle %s' % device_dir)
 
 
 if __name__ == '__main__':
