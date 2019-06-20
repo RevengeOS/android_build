@@ -246,3 +246,11 @@ com\.google\.vr\.platform.*
 ###################################################
 # Packages used for Android in Chrome OS
 org\.chromium\.arc
+
+###################################################
+#AliPay
+org\.ifaa\.android\.manager
+
+###################################################
+#Livedisplay
+vendor\.lineage\.livedisplay\.V2_0
