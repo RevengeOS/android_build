@@ -32,7 +32,7 @@ ifeq ($(REVENGEOS_BUILD),)
 # Additional settings used in all AOSP builds
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.config.ringtone=Ring_Synth_04.ogg \
-    ro.config.notification_sound=pixiedust.ogg \
+    ro.config.notification_sound=pixiedust.ogg
 endif
 
 # The mainline checking whitelist, should be clean up
@@ -47,7 +47,7 @@ PRODUCT_ARTIFACT_PATH_REQUIREMENT_WHITELIST += \
     system/lib/libframesequence.so \
     system/lib/libgiftranscode.so \
     system/lib64/libframesequence.so \
-    system/lib64/libgiftranscode.so \
+    system/lib64/libgiftranscode.so
 
 # Some GSI builds enable dexpreopt, whitelist these preopt files
 PRODUCT_ARTIFACT_PATH_REQUIREMENT_WHITELIST += %.odex %.vdex %.art
@@ -55,7 +55,7 @@ PRODUCT_ARTIFACT_PATH_REQUIREMENT_WHITELIST += %.odex %.vdex %.art
 # Exclude GSI specific files
 PRODUCT_ARTIFACT_PATH_REQUIREMENT_WHITELIST += \
     system/etc/init/config/skip_mount.cfg \
-    system/etc/init/init.gsi.rc \
+    system/etc/init/init.gsi.rc
 
 # Exclude all files under system/product and system/product_services
 PRODUCT_ARTIFACT_PATH_REQUIREMENT_WHITELIST += \
@@ -75,7 +75,7 @@ PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE := true
 # GSI specific tasks on boot
 PRODUCT_COPY_FILES += \
     build/make/target/product/gsi/skip_mount.cfg:system/etc/init/config/skip_mount.cfg \
-    build/make/target/product/gsi/init.gsi.rc:system/etc/init/init.gsi.rc \
+    build/make/target/product/gsi/init.gsi.rc:system/etc/init/init.gsi.rc
 
 # Support addtional P vendor interface
 PRODUCT_EXTRA_VNDK_VERSIONS := 28
@@ -84,7 +84,7 @@ PRODUCT_EXTRA_VNDK_VERSIONS := 28
 PRODUCT_PACKAGES += \
     messaging \
     WAPPushManager \
-    WallpaperPicker \
+    WallpaperPicker
 
 # Telephony:
 #   Provide a APN configuration to GSI product
