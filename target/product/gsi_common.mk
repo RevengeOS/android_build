@@ -97,3 +97,4 @@ endif
 #   Provide a libnfc-nci.conf to GSI product
 PRODUCT_COPY_FILES += \
     build/make/target/product/nfc/libnfc-nci.conf:$(TARGET_COPY_OUT_PRODUCT)/etc/libnfc-nci.conf
+endif
