@@ -246,3 +246,9 @@ com\.google\.i18n\.phonenumbers
 # Packages used for Android in Chrome OS
 org\.chromium\.arc
 org\.chromium\.arc\..*
+
+###################################################
+# QCOM WFD
+com\.qualcomm\.wfd
+com\.qualcomm\.wfd\..*
+
