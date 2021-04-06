@@ -675,14 +675,14 @@ function lunch()
         T=$(gettop)
         C=$(pwd)
         cd $T
-        $T/vendor/potato/build/tools/roomservice.py $product
+        $T/vendor/revengeos/build/tools/roomservice.py $product
         cd $C
         check_product $product
     else
         T=$(gettop)
         C=$(pwd)
         cd $T
-        $T/vendor/potato/build/tools/roomservice.py $product true
+        $T/vendor/revengeos/build/tools/roomservice.py $product true
         cd $C
     fi
     if [ $? -ne 0 ]
